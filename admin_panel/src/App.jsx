@@ -27,8 +27,20 @@ function App() {
       message: `${new Date().toLocaleTimeString()}: ${message}`,
       type
     }
-    setStatusMessages(prev => [newMessage, ...prev].slice(0, 100)) // Keep last 100 logs
+    setStatusMessages(prev => {
+      const updated = [newMessage, ...prev];
+      if (updated.length > 100) {
+        return updated.slice(0, 100);
+      }
+      return updated;
+    })
   }
+
+  // Clear legacy logs if any
+  useEffect(() => {
+    localStorage.removeItem('logs');
+    localStorage.removeItem('system_logs');
+  }, []);
 
   const handleClearLogs = () => {
     setStatusMessages([])
